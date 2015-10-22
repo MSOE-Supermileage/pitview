@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  	<head>
+    	<title><%= title %></title>
+    	
+    	<link rel='stylesheet' href='/stylesheets/style.css' />
+    	
+    	<script type="text/javascript" src="/javascript/socket.io-1.2.0.js"></script>
+		<script type="text/javascript" src="/javascript/jquery-1.11.1.js"></script>
+		<script type="text/javascript" src="/javascript/jsapi.js"></script>
+
+    	<script>
+    		var socket = new io();
+    		
+			google.load("visualization", "1", {packages:["gauge"]});
+		    google.setOnLoadCallback(drawChart);
+		    
+		    function drawChart() {
+		    	var chartDataSpeed = google.visualization.arrayToDataTable([
+		    		['Label', 'Value'],
+		    		['Speed', 0]
+		    	]);
+		    	
+		    	var chartDataRpm = google.visualization.arrayToDataTable([
+		    		['Label', 'Value'],
+		    		['RPM', {v: 0, f: '0'}]
+		    	]);
+		    	
+		    	var optionsSpeed = {
+		    		width: 120, height: 120,
+		    		max: 60
+		    	};
+		    	
+		    	var optionsRpm = {
+		    		width: 120, height: 120,
+		    		majorTicks: ['0', '1', '2', '3', '4', '5', '6'],
+		    		max: 6
+		    	};
+		    	
+		    	var chartSpeed = new google.visualization.Gauge(document.getElementById('speed_gauge'));
+		    	var chartRpm = new google.visualization.Gauge(document.getElementById('rpm_gauge'));
+		    	
+		    	chartSpeed.draw(chartDataSpeed, optionsSpeed);
+		    	chartRpm.draw(chartDataRpm, optionsRpm);
+		    	
+		    	socket.on('update', function(dataStr) {
+	    			var data = JSON.parse(dataStr);
+	    			
+	    			$('#data').text('Data: ' + data.speed);
+	    			
+	    			chartDataSpeed.setValue(0, 1, Math.round(data.speed));
+	    			chartDataRpm.setCell(0, 1, (data.rpm / 1000), Math.round(data.rpm) + '');
+	    			
+		          	chartSpeed.draw(chartDataSpeed, optionsSpeed);
+		    		chartRpm.draw(chartDataRpm, optionsRpm);
+	    		});
+		    }
+    	</script>
+  	</head>
+  	<body>
+    	<h1><%= title %></h1>
+    	<p>Welcome to <%= title %></p>
+    	
+    	<span id="data">Data</span>
+    	
+    	<div id="speed_gauge" style="width: 400px; height: 120px;"></div>
+    	<div id="rpm_gauge" style="width: 120px; height: 120px;"></div>
+  	</body>
+</html>
