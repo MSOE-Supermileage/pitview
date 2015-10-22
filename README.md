@@ -10,3 +10,11 @@ The web service for the SuperMileage car. Displays things such as speed and RPM 
 ### Requirements
 - Node.JS
 - Git
+
+### How to Clone
+1. Install the NodeEclipse plugin in eclipse: http://www.nodeclipse.org/updates/
+2. Install EGit into eclipse: http://download.eclipse.org/egit/updates
+3. Install an HTML editor for eclipse:
+	- Goto Help > Eclipse Marketplace, search for html editor and install
+4. Right click in the Project Explorer and choose Import
+5. Goto Git > Projects from Git, Next > Clone URI, URI is https://github.com/MSOE-Supermileage/SM-Web.git

@@ -5,9 +5,9 @@
     	
     	<link rel='stylesheet' href='/stylesheets/style.css' />
     	
-    	<script type="text/javascript" src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-		<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.js"></script>
-		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    	<script type="text/javascript" src="/javascript/socket.io-1.2.0.js"></script>
+		<script type="text/javascript" src="/javascript/jquery-1.11.1.js"></script>
+		<script type="text/javascript" src="/javascript/jsapi.js"></script>
 
     	<script>
     		var socket = new io();
@@ -46,7 +46,7 @@
 		    	socket.on('update', function(dataStr) {
 	    			var data = JSON.parse(dataStr);
 	    			
-	    			$("#data").text("Data: " + data.speed);
+	    			$('#data').text('Data: ' + data.speed);
 	    			
 	    			chartDataSpeed.setValue(0, 1, Math.round(data.speed));
 	    			chartDataRpm.setCell(0, 1, (data.rpm / 1000), Math.round(data.rpm) + '');
