@@ -13,7 +13,7 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-// All environments
+//All environments
 app.set('port', process.env.PORT || 1337);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -26,7 +26,7 @@ app.use(app.router);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Development only
+//Development only
 if ('development' == app.get('env'))
 {
 	app.use(express.errorHandler());
