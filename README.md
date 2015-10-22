@@ -1,20 +1,12 @@
+# SuperMileage Web
+The web service for the SuperMileage car. Displays things such as speed and RPM on a live browser window.
 
+### About
+- This is the cloud based service running Node.JS
+- The android phone sends the data to here so the pit is able to view the data live!
+- Sends the data over a cellular network up into the cloud
+- Every push to the production branch is a live deploy to the cloud
 
-# SuperMileage Web Express
-
-
-
-## Usage
-
-
-
-## Developing
-
-
-
-### Tools
-
-Created with [Nodeclipse](https://github.com/Nodeclipse/nodeclipse-1)
- ([Eclipse Marketplace](http://marketplace.eclipse.org/content/nodeclipse), [site](http://www.nodeclipse.org))   
-
-Nodeclipse is free open-source project that grows with your contributions.
+### Requirements
+- Node.JS
+- Git
