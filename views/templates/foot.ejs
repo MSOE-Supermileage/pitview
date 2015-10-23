@@ -1,0 +1,98 @@
+<!-- Include all Javascript dependencies -->
+<script type="text/javascript" src="/javascript/jquery-1.11.1.js"></script>
+<script type="text/javascript" src="/javascript/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="/javascript/metisMenu.min.js"></script>
+<script type="text/javascript" src="/javascript/raphael-min.js"></script>
+<script type="text/javascript" src="/javascript/morris.min.js"></script>
+<script type="text/javascript" src="/javascript/morris-data.js"></script>
+<script type="text/javascript" src="/javascript/sb-admin-2.js"></script>
+
+<script type="text/javascript" src="/javascript/socket.io-1.2.0.js"></script>
+<script type="text/javascript" src="/javascript/jsapi.js"></script>
+  	
+  	<script>
+		var graphData = [];
+  		
+   		var graph = Morris.Line({
+           element: 'morris-area-chart',
+           data: graphData,
+           xkey: 'time',
+           ykeys: ['speed', 'rpm'],
+           labels: ['Speed', 'RPM'],
+           pointSize: 2,
+           hideHover: 'auto',
+           resize: true
+       });
+  		
+   		var start = Date.now();
+  		var socket = new io();
+  		
+  		socket.on('update', function(dataStr) {
+  			var data = JSON.parse(dataStr);
+  			
+  			graphData.push({
+  				time: (Date.now() - start),
+                  speed: data.speed,
+                  rpm: data.rpm
+  			});
+  			
+  			if (graphData.length > 20) graphData.shift();
+  			
+  			graph.setData(graphData);
+  			
+  			/*
+  			$('#data').text('Data: ' + data.speed);
+  			
+  			chartDataSpeed.setValue(0, 1, Math.round(data.speed));
+  			chartDataRpm.setCell(0, 1, (data.rpm / 1000), Math.round(data.rpm) + '');
+  			
+         	chartSpeed.draw(chartDataSpeed, optionsSpeed);
+   		chartRpm.draw(chartDataRpm, optionsRpm);
+   		*/
+  		});
+  		
+		google.load("visualization", "1", {packages:["gauge"]});
+	    google.setOnLoadCallback(drawChart);
+	    
+	    function drawChart() {
+	    	var chartDataSpeed = google.visualization.arrayToDataTable([
+	    		['Label', 'Value'],
+	    		['Speed', 0]
+	    	]);
+	    	
+	    	var chartDataRpm = google.visualization.arrayToDataTable([
+	    		['Label', 'Value'],
+	    		['RPM', {v: 0, f: '0'}]
+	    	]);
+	    	
+	    	var optionsSpeed = {
+	    		width: 120, height: 120,
+	    		max: 60
+	    	};
+	    	
+	    	var optionsRpm = {
+	    		width: 120, height: 120,
+	    		majorTicks: ['0', '1', '2', '3', '4', '5', '6'],
+	    		max: 6
+	    	};
+	    	
+	    	var chartSpeed = new google.visualization.Gauge(document.getElementById('speed_gauge'));
+	    	var chartRpm = new google.visualization.Gauge(document.getElementById('rpm_gauge'));
+	    	
+	    	chartSpeed.draw(chartDataSpeed, optionsSpeed);
+	    	chartRpm.draw(chartDataRpm, optionsRpm);
+	    	
+	    	socket.on('update', function(dataStr) {
+	   			var data = JSON.parse(dataStr);
+	   			
+	   			$('#data').text('Data: ' + data.speed);
+	   			
+	   			chartDataSpeed.setValue(0, 1, Math.round(data.speed));
+	   			chartDataRpm.setCell(0, 1, (data.rpm / 1000), Math.round(data.rpm) + '');
+	   			
+	          	chartSpeed.draw(chartDataSpeed, optionsSpeed);
+	    		chartRpm.draw(chartDataRpm, optionsRpm);
+	   		});
+	    }
+  	</script>

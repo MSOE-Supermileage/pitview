@@ -4,36 +4,33 @@
  */
 
 var express = require('express')
-  , routes = require('./routes')
-  , user = require('./routes/user')
-  , path = require('path');
+  , passport = require('passport')
+  , engine = require('ejs-locals')
+  , path = require('path')
+  , favicon = require('serve-favicon')
+  , logger = require('morgan')
+  , bodyParser = require('body-parser');
 
 var app = express();
 
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+var routes = require('./routes/index')
+  , user = require('./routes/user');
+
 //All environments
 app.set('port', process.env.PORT || 1337);
 app.set('views', __dirname + '/views');
+
+app.engine('ejs', engine);
 app.set('view engine', 'ejs');
 
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(app.router);
-
+app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-//Development only
-if ('development' == app.get('env'))
-{
-	app.use(express.errorHandler());
-}
-
-app.get('/', routes.index);
-app.get('/users', user.list);
+app.use('/', routes);
+app.use('/users', user);
 
 http.listen(app.get('port'), function() {
 	console.log('Express server listening on port ' + app.get('port'));
