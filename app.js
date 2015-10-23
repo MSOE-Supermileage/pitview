@@ -13,7 +13,7 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-//All environments
+//All environments new
 app.set('port', process.env.PORT || 1337);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
