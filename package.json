@@ -11,7 +11,6 @@
     "ejs": "~2.3.3",
     "ejs-locals": "^1.0.2",
     "serve-favicon": "~2.3.0",
-    "morgan": "~1.6.1",
-    "passport": "^0.2.2"
+    "morgan": "~1.6.1"
   }
 }
