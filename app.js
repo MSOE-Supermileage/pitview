@@ -1,25 +1,22 @@
-
-/**
- * Module dependencies.
- */
-
+//Module dependencies
 var express = require('express')
-  , passport = require('passport')
   , engine = require('ejs-locals')
   , path = require('path')
   , favicon = require('serve-favicon')
   , logger = require('morgan')
   , bodyParser = require('body-parser');
 
+//Declare app, express and io
 var app = express();
 
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+//Routes
 var routes = require('./routes/index')
-  , user = require('./routes/user');
+  , car = require('./routes/car');
 
-//All environments
+//App settings
 app.set('port', process.env.PORT || 1337);
 app.set('views', __dirname + '/views');
 
@@ -30,12 +27,14 @@ app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', user);
+app.use('/car', car);
 
+//Start express server
 http.listen(app.get('port'), function() {
 	console.log('Express server listening on port ' + app.get('port'));
 });
 
+//Listen for socket.io connections
 io.on('connection', function(socket) {
 	console.log('A user connected');
 	
