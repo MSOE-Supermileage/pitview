@@ -6,15 +6,15 @@
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
-  , path = require('path');
+  , path = require('path')
+  , http = require('http');
 
 var app = express();
+var server = app.listen(process.env.PORT || 1337);
 
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var io = require('socket.io').listen(server);
 
 //All environments new
-app.set('port', process.env.PORT || 1337);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
@@ -35,9 +35,11 @@ if ('development' == app.get('env'))
 app.get('/', routes.index);
 app.get('/users', user.list);
 
+/*
 http.listen(app.get('port'), function() {
 	console.log('Express server listening on port ' + app.get('port'));
 });
+*/
 
 io.on('connection', function(socket) {
 	console.log('A user connected');
