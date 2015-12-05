@@ -6,7 +6,7 @@ var express = require('express')
   , logger = require('morgan')
   , bodyParser = require('body-parser');
 
-//Declare app, express and io
+//Declare app, express and io 
 var app = express();
 
 var http = require('http').Server(app);
