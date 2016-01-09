@@ -13,15 +13,17 @@
    </div>
    <!-- /.panel-body -->
 </div>
+
 <div class="panel panel-default">
    <div class="panel-heading">
       <i class="fa fa-bar-chart-o fa-fw"></i> Live Car Data
    </div>
    <div class="panel-body">
-      <div id="chart_div" style="width: 400px; height: 120px;"></div>
-      <div id="RPM" style="width: 400px; height: 120px;"></div>
-   </div>
-   <!-- /.panel-body -->
+    <div class="col-md-4">
+      <div id="chart_div"></div>
+      </div>
+      <div id="RPM" ></div>
+   </div><!-- /.panel-body -->
 </div>
 </div>
 <% include ../templates/javascript %>
@@ -53,8 +55,9 @@
      ]);
      var optionsRPM = {
      	width, height: 120,
-     	redFrom: 90, redTo : 100,
-     	yellowFrom: 75, yellowTo: 90,
+     	min: 0, max: 5000,
+     	redFrom: 4500, redTo : 5000,
+     	yellowFrom: 4000, yellowTo: 4500,
      	minorTicks: 5
      };
      var gauges = new google.visualization.Gauge(document.getElementById('chart_div'));
@@ -88,7 +91,7 @@
      }, 26000);
      setInterval(function() {
      //Every 26 seconds set the data to a random point for the A/F Ratio gauge
-       dataRPM.setValue(0, 1, 2000);
+       dataRPM.setValue(0, 1, + Math.round(5000 * Math.random()));
        gaugesRPM.draw(dataRPM, optionsRPM);
      }, 5000);
    }
