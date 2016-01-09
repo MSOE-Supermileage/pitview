@@ -34,15 +34,6 @@ http.listen(app.get('port'), function() {
 	console.log('Express server listening on port ' + app.get('port'));
 });
 
-function updateData()
-{
-	io.emit('update', '{"speed": 30, "rpm": 3000}');
-	
-	setTimeout(updateData, 300);
-}
-
-updateData();
-
 //Listen for socket.io connections
 io.on('connection', function(socket) {
 	console.log('A user connected');
