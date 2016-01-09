@@ -2,9 +2,125 @@
 
 <div class="row">
    	<div class="col-lg-12">
-       	<h1 class="page-header">Dashboard</h1>
+       	<h1 class="page-header">Gas Car</h1>
    	</div>
 	<!-- /.col-lg-12 -->
 </div>
-
+<!-- /.row -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> Live Car Data
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div id="morris-area-chart"></div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+        </div>
+        <!-- /.col-lg-8 -->
+        <div class="col-lg-4">
+        	<div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> Live Car Data
+                </div>
+                <div class="panel-body">
+                    <div id="speed_gauge" style="width: 120px; height: 120px; float: left; margin-left: 30px;"></div>
+					<div id="rpm_gauge" style="width: 120px; height: 120px; float: right; margin-right: 30px;"></div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            </div>
+            <!-- /.panel .chat-panel -->
+        </div>
+        <!-- /.col-lg-4 -->
+    </div>
+    <!-- /.row -->
 <% include ../templates/javascript %>
+ <script>
+		var graphData = [];
+  		
+   		var graph = Morris.Line({
+           element: 'morris-area-chart',
+           data: graphData,
+           xkey: 'time',
+           ykeys: ['speed', 'rpm'],
+           labels: ['Speed', 'RPM'],
+           pointSize: 2,
+           hideHover: 'auto',
+           resize: true
+       });
+  		
+   		var start = Date.now();
+  		var socket = new io();
+  		
+  		socket.on('update', function(dataStr) {
+  			var data = JSON.parse(dataStr);
+  			
+  			graphData.push({
+				time: (Date.now() - start),
+                speed: data.speed,
+                rpm: data.rpm
+  			});
+  			
+  			if (graphData.length > 20) graphData.shift();
+  			
+  			graph.setData(graphData);
+  			
+  			/*
+  			$('#data').text('Data: ' + data.speed);
+  			
+  			chartDataSpeed.setValue(0, 1, Math.round(data.speed));
+  			chartDataRpm.setCell(0, 1, (data.rpm / 1000), Math.round(data.rpm) + '');
+  			
+         	chartSpeed.draw(chartDataSpeed, optionsSpeed);
+   		chartRpm.draw(chartDataRpm, optionsRpm);
+   		*/
+  		});
+  		
+		google.load("visualization", "1", {packages:["gauge"]});
+	    google.setOnLoadCallback(drawChart);
+	    
+	    function drawChart() {
+	    	var chartDataSpeed = google.visualization.arrayToDataTable([
+	    		['Label', 'Value'],
+	    		['Speed', 0]
+	    	]);
+	    	
+	    	var chartDataRpm = google.visualization.arrayToDataTable([
+	    		['Label', 'Value'],
+	    		['RPM', {v: 0, f: '0'}]
+	    	]);
+	    	
+	    	var optionsSpeed = {
+	    		width: 120, height: 120,
+	    		max: 60
+	    	};
+	    	
+	    	var optionsRpm = {
+	    		width: 120, height: 120,
+	    		majorTicks: ['0', '1', '2', '3', '4', '5', '6'],
+	    		max: 6
+	    	};
+	    	
+	    	var chartSpeed = new google.visualization.Gauge(document.getElementById('speed_gauge'));
+	    	var chartRpm = new google.visualization.Gauge(document.getElementById('rpm_gauge'));
+	    	
+	    	chartSpeed.draw(chartDataSpeed, optionsSpeed);
+	    	chartRpm.draw(chartDataRpm, optionsRpm);
+	    	
+	    	socket.on('update', function(dataStr) {
+	   			var data = JSON.parse(dataStr);
+	   			
+	   			$('#data').text('Data: ' + data.speed);
+	   			
+	   			chartDataSpeed.setValue(0, 1, Math.round(data.speed));
+	   			chartDataRpm.setCell(0, 1, (data.rpm / 1000), Math.round(data.rpm) + '');
+	   			
+	          	chartSpeed.draw(chartDataSpeed, optionsSpeed);
+	    		chartRpm.draw(chartDataRpm, optionsRpm);
+	   		});
+	    }
+  	</script>
