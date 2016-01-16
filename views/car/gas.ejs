@@ -9,7 +9,7 @@
    </div>
    <!-- /.panel-heading -->
    <div class="panel-body">
-      <div id="morris-area-chart"></div>
+      <div id="placeholder" style="width:600px;height:300px"></div>
    </div>
    <!-- /.panel-body -->
 </div>
@@ -39,10 +39,9 @@
        ['Label', 'Value'],
        ['Speed', 55],
        ['Temp', 68],
-       ['Joules', 50],
        ['A/F Ratio', 90]
      ]);
-   	
+    
      var options = {
        width, height: 120,
        redFrom: 90, redTo: 100,
@@ -54,14 +53,14 @@
        ['RPM', 5000]
      ]);
      var optionsRPM = {
-     	width, height: 120,
-     	min: 0, max: 5000,
-     	redFrom: 4500, redTo : 5000,
-     	yellowFrom: 4000, yellowTo: 4500,
-     	minorTicks: 5
+        width, height: 120,
+        min: 0, max: 5000,
+        redFrom: 4500, redTo : 5000,
+        yellowFrom: 4000, yellowTo: 4500,
+        minorTicks: 5
      };
      var gauges = new google.visualization.Gauge(document.getElementById('chart_div'));
-   	 var gaugesRPM = new google.visualization.Gauge(document.getElementById('RPM'));
+     var gaugesRPM = new google.visualization.Gauge(document.getElementById('RPM'));
      gauges.draw(data, options);
      gaugesRPM.draw(dataRPM, optionsRPM);
      setInterval(function() {
@@ -79,11 +78,6 @@
        data.setValue(2, 1, 60 + Math.round(20 * Math.random()));
        gauges.draw(data, options);
      }, 26000);
-      setInterval(function() {
-     //Every 5 seconds set the data to a random point for the Joules gauge
-       data.setValue(3, 1, 40 + Math.round(60 * Math.random()));
-       gauges.draw(data, options);
-     }, 5000);
      setInterval(function() {
      //Every 26 seconds set the data to a random point for the A/F Ratio gauge
        data.setValue(4, 1, 60 + Math.round(20 * Math.random()));
@@ -95,4 +89,8 @@
        gaugesRPM.draw(dataRPM, optionsRPM);
      }, 5000);
    }
+    $(document).ready(function () {
+        $.plot($("#placeholder"),
+               [ [[0, 0], [1, 1]] ], { yaxis: { max: 1 } });
+    });
 </script>
