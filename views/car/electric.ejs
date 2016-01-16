@@ -9,7 +9,9 @@
    </div>
    <!-- /.panel-heading -->
    <div class="panel-body">
-      <div id="morris-area-chart"></div>
+      <div class="demo-container">
+            <div id="placeholder" style="width:100%;height:400px"></div>
+        </div>
    </div>
    <!-- /.panel-body -->
 </div>
@@ -37,7 +39,7 @@
      var data = google.visualization.arrayToDataTable([
        ['Label', 'Value'],
        ['Speed', 55],
-       ['Temp', 68]
+       ['Joules', 68]
      ]);
     
      var options = {
@@ -50,23 +52,98 @@
      gauges.draw(data, options);
      setInterval(function() {
      //Every 5 seconds set the data to a random point for the Speed gauge
-       data.setValue(1, 1, 40 + Math.round(60 * Math.random()));
+       data.setValue(0, 1, 40 + Math.round(60 * Math.random()));
        gauges.draw(data, options);
      }, 5000);
      setInterval(function() {
-     //Every 26 seconds set the data to a random point for the Engine Temp gauge
-       data.setValue(2, 1, 60 + Math.round(20 * Math.random()));
+     //Every 26 seconds set the data to a random point for the Joules gauge
+       data.setValue(1, 1, 60 + Math.round(20 * Math.random()));
        gauges.draw(data, options);
      }, 26000);
-      setInterval(function() {
-     //Every 5 seconds set the data to a random point for the Joules gauge
-       data.setValue(3, 1, 40 + Math.round(60 * Math.random()));
-       gauges.draw(data, options);
-     }, 5000);
-     setInterval(function() {
-     //Every 26 seconds set the data to a random point for the A/F Ratio gauge
-       dataRPM.setValue(0, 1, + Math.round(5000 * Math.random()));
-       gaugesRPM.draw(dataRPM, optionsRPM);
-     }, 5000);
    }
 </script>
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        // We use an inline data source in the example, usually data would
+        // be fetched from a server
+
+        var data = [],
+            totalPoints = 300;
+
+        function getRandomData() {
+
+            if (data.length > 0)
+                data = data.slice(1);
+
+            // Do a random walk
+
+            while (data.length < totalPoints) {
+
+                var prev = data.length > 0 ? data[data.length - 1] : 50,
+                    y = prev + Math.random() * 10 - 5;
+
+                if (y < 0) {
+                    y = 0;
+                } else if (y > 100) {
+                    y = 100;
+                }
+
+                data.push(y);
+            }
+
+            // Zip the generated y values with the x values
+
+            var res = [];
+            for (var i = 0; i < data.length; ++i) {
+                res.push([i, data[i]])
+            }
+
+            return res;
+        }
+
+        // Set up the control widget
+
+        var updateInterval = 30;
+        $("#updateInterval").val(updateInterval).change(function () {
+            var v = $(this).val();
+            if (v && !isNaN(+v)) {
+                updateInterval = +v;
+                if (updateInterval < 1) {
+                    updateInterval = 1;
+                } else if (updateInterval > 2000) {
+                    updateInterval = 2000;
+                }
+                $(this).val("" + updateInterval);
+            }
+        });
+
+        var plot = $.plot("#placeholder", [ getRandomData() ], {
+            series: {
+                shadowSize: 0   // Drawing is faster without shadows
+            },
+            yaxis: {
+                min: 0,
+                max: 100
+            },
+            xaxis: {
+                show: false
+            }
+        });
+
+        function update() {
+
+            plot.setData([getRandomData()]);
+
+            // Since the axes don't change, we don't need to call plot.setupGrid()
+
+            plot.draw();
+            setTimeout(update, updateInterval);
+        }
+
+        update();
+
+    });
+
+    </script>
