@@ -35,3 +35,8 @@ Live production url: http://supermileage.azurewebsites.net/
 13. You are now all set up to begin pushing commits to the repo!
 
 TEST CHANGE from JORDAN
+
+## License
+
+This work is published under the Eclipse Public License 1.0, see License for
+more details.
