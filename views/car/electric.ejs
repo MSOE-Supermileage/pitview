@@ -1,10 +1,138 @@
-<% layout('../layout') %>
-
-<div class="row">
-   	<div class="col-lg-12">
-       	<h1 class="page-header">Dashboard</h1>
-   	</div>
-	<!-- /.col-lg-12 -->
+<% layout('../layout') -%>
+<div class="col-lg-12">
+   <h1 class="page-header">Gas Car</h1>
+</div>
+<div style="height: 120px;"></div>
+<div class="panel panel-default">
+   <div class="panel-heading">
+      <i class="fa fa-bar-chart-o fa-fw"></i> Live Car Data
+   </div>
+   <!-- /.panel-heading -->
+   <div class="panel-body">
+      <div class="demo-container">
+            <div id="placeholder" style="width:100%;height:400px"></div>
+        </div>
+   </div>
+   <!-- /.panel-body -->
 </div>
 
+<div class="panel panel-default">
+   <div class="panel-heading">
+      <i class="fa fa-bar-chart-o fa-fw"></i> Live Car Data
+   </div>
+   <div class="panel-body">
+    <div class="col-md-4">
+      <div id="chart_div"></div>
+      </div>
+   </div><!-- /.panel-body -->
+</div>
+</div>
 <% include ../templates/javascript %>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+   google.charts.load('current', {'packages':['gauge']});
+   google.charts.setOnLoadCallback(drawChart);
+   function drawChart() {
+   
+   
+   //This is the name and initail value for each gauge.
+     var data = google.visualization.arrayToDataTable([
+       ['Label', 'Value'],
+       ['Speed', 55],
+       ['Joules', 68]
+     ]);
+    
+     var options = {
+       width, height: 120,
+       redFrom: 90, redTo: 100,
+       yellowFrom:75, yellowTo: 90,
+       minorTicks: 5
+     };
+     var gauges = new google.visualization.Gauge(document.getElementById('chart_div'));
+     gauges.draw(data, options);
+     setInterval(function() {
+     //Every 5 seconds set the data to a random point for the Speed gauge
+       data.setValue(0, 1, 40 + Math.round(60 * Math.random()));
+       gauges.draw(data, options);
+     }, 5000);
+     setInterval(function() {
+     //Every 26 seconds set the data to a random point for the Joules gauge
+       data.setValue(1, 1, 60 + Math.round(20 * Math.random()));
+       gauges.draw(data, options);
+     }, 26000);
+   }
+</script>
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        // We use an inline data source in the example, usually data would
+        // be fetched from a server
+
+        var data = [],
+            totalPoints = 300;
+
+        function getRandomData() {
+
+            if (data.length > 0)
+                data = data.slice(1);
+
+            // Do a random walk
+
+            while (data.length < totalPoints) {
+
+                var prev = data.length > 0 ? data[data.length - 1] : 50,
+                    y = prev + Math.random() * 10 - 5;
+
+                if (y < 0) {
+                    y = 0;
+                } else if (y > 100) {
+                    y = 100;
+                }
+
+                data.push(y);
+            }
+
+            // Zip the generated y values with the x values
+
+            var res = [];
+            for (var i = 0; i < data.length; ++i) {
+                res.push([i, data[i]])
+            }
+
+            return res;
+        }
+
+        // Set up the control widget
+
+        var updateInterval = 30;
+       
+
+        var plot = $.plot("#placeholder", [ getRandomData() ], {
+            series: {
+                shadowSize: 0   // Drawing is faster without shadows
+            },
+            yaxis: {
+                min: 0,
+                max: 100
+            },
+            xaxis: {
+                show: false
+            }
+        });
+
+        function update() {
+
+            plot.setData([getRandomData()]);
+
+            // Since the axes don't change, we don't need to call plot.setupGrid()
+
+            plot.draw();
+            setTimeout(update, updateInterval);
+        }
+
+        update();
+
+    });
+
+    </script>

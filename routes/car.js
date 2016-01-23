@@ -11,7 +11,7 @@ router.get('/gas', function(req, res) {
 });
 
 router.get('/electric', function(req, res) {
-	res.render('car/gas', { title: 'Express' });
+	res.render('car/electric', { title: 'Express' });
 });
 
 module.exports = router;
