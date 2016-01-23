@@ -38,5 +38,5 @@ TEST CHANGE from JORDAN
 
 ## License
 
-This work is published under the Eclipse Public License 1.0, see License for
+This work is published under the Eclipse Public License 1.0, see LICENSE for
 more details.
